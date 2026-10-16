@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>OneBot 配置生成器</title>
+  <style>
+    :root{--ink:#182a36;--muted:#697b86;--line:#dce5e9;--accent:#086f66;--paper:#fff;--bg:#f3f6f6;--danger:#b23838}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #40bcb0;outline-offset:3px}
+    .shell{max-width:1420px;margin:auto;padding:38px 44px 48px}.top{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:28px}
+    .brand{display:flex;gap:16px;align-items:center}.mark{display:grid;place-items:center;width:48px;height:48px;background:var(--accent);color:white;border-radius:14px;font:bold 20px monospace}
+    h1{font-size:25px;letter-spacing:-.5px;margin:0}h2{font-size:17px;margin:0}p{margin:0}.subtitle{color:var(--muted);margin-top:3px}.badge{border:1px solid #cde2dd;background:#e6f3ef;padding:5px 12px;border-radius:24px;color:var(--accent);font-size:12px;white-space:nowrap}
+    .layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,1fr);gap:26px;align-items:start}.form-stack{display:grid;gap:18px}
+    .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden}.card-head{display:flex;gap:14px;align-items:center;padding:20px 24px;border-bottom:1px solid #edf1f3}
+    .number{font:12px monospace;color:var(--accent);background:#e9f4f1;border-radius:7px;padding:6px 8px}.card-head small{color:var(--muted);font-size:12px}.fields{padding:22px 24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:19px 20px}
+    .field{min-width:0}.full{grid-column:1/-1}label{display:block;font-weight:600;margin-bottom:7px}label .key{font:11px ui-monospace,Consolas,monospace;color:var(--muted);font-weight:400;margin-left:7px}
+    input,select,textarea{width:100%;border:1px solid #ccd9de;border-radius:8px;background:#fcfdfd;padding:10px 12px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s}input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #086f6615}
+    textarea{min-height:86px;resize:vertical;font-family:ui-monospace,Consolas,monospace;font-size:12px}input[aria-invalid="true"],textarea[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--danger);background:#fff8f8}
+    .hint{color:var(--muted);font-size:12px;margin-top:6px}.error{color:var(--danger);font-size:12px;margin-top:4px}.error:empty{display:none}.group-label{grid-column:1/-1;color:var(--accent);font-size:12px;font-weight:700;letter-spacing:1px;border-bottom:1px solid #e6edef;padding-bottom:8px}.inline{display:flex;gap:8px}.inline input{min-width:0}.show{border:1px solid #ccd9de;border-radius:8px;background:#f8fbfb;color:var(--muted);padding:0 11px;white-space:nowrap;font-size:12px}
+    .note{grid-column:1/-1;border-radius:8px;padding:11px 13px;background:#f0f6f5;font-size:12px;color:#436560}.note.warning{background:#fff6df;color:#876219}.note[hidden]{display:none}
+    .preview{position:sticky;top:24px;background:#142933;border-radius:16px;overflow:hidden;box-shadow:0 12px 30px #162d3710}.preview-head{padding:20px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff16;color:#ecf3f5}.file{display:flex;align-items:center;gap:10px}.file-icon{font:13px monospace;color:#8de0cb}.state{font-size:12px;color:#9bdbc7}.state.invalid{color:#ffd69e}
+    .preview-desc{color:#95aeb7;padding:15px 22px 0;font-size:12px}.code-wrap{padding:18px 22px 22px;overflow:auto;max-height:calc(100vh - 290px);min-height:360px}pre{margin:0;tab-size:2;color:#d2e2e8;white-space:pre;font:12px/1.85 ui-monospace,"Cascadia Code",Consolas,monospace}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;padding:18px 22px;background:#1b333e;border-top:1px solid #ffffff10}.btn{border:1px solid #ccd9de;background:white;border-radius:8px;padding:10px 15px;font-weight:600;color:var(--ink)}.primary{background:#66d2b6;border-color:#66d2b6;color:#12352d}.secondary{background:#294550;color:#e6f1f4;border-color:#3d5b65}.btn:disabled{opacity:.45;cursor:not-allowed}.reset{border:0;background:transparent;color:var(--muted);padding:8px 0;font-size:12px;justify-self:start}.bottom{color:var(--muted);font-size:12px;margin-top:24px;text-align:center}.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#173c34;color:white;max-width:calc(100vw - 32px);padding:12px 20px;border-radius:10px;box-shadow:0 6px 25px #0002;z-index:10}.toast[hidden]{display:none}.checkrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 24px 19px}.checkrow label{font-size:12px;font-weight:400;display:flex;gap:8px;align-items:center;margin:0;color:var(--muted)}.checkrow input{width:15px;height:15px;accent-color:var(--accent)}
+    @media(min-width:1550px){.code-wrap{max-height:760px}}@media(max-width:1000px){.shell{padding:26px}.layout{grid-template-columns:1fr}.preview{position:static}.code-wrap{max-height:560px;min-height:0}}
+    @media(max-width:540px){.shell{padding:20px 14px}.top{align-items:flex-start}.brand{gap:10px}.mark{width:39px;height:39px;border-radius:11px}h1{font-size:20px}.subtitle{font-size:12px}.badge{display:none}.fields{grid-template-columns:1fr;padding:20px 18px}.card-head{padding:17px 18px}.full,.group-label,.note{grid-column:1}.key{display:block;margin:3px 0 0!important}.actions .btn{flex:1}.checkrow{padding-left:18px;padding-right:18px}}
+  </style>
+</head>
+<body>
+<main class="shell">
+  <header class="top">
+    <div class="brand"><div class="mark" aria-hidden="true">{ }</div><div><h1>OneBot 配置生成器</h1><p class="subtitle">编辑参数，即时生成可用的 YAML 配置。</p></div></div>
+    <span class="badge">离线可用 · 无需安装</span>
+  </header>
+  <div class="layout">
+    <form id="config-form" class="form-stack" novalidate>
+      <section class="card" aria-labelledby="protocol-title">
+        <div class="card-head"><span class="number">01</span><div><h2 id="protocol-title">登录协议</h2><small>平台、服务器与签名设置</small></div></div>
+        <div class="fields">
+          <div class="field"><label for="os">协议平台 <span class="key">os</span></label><select id="os"><option value="windows">Windows</option><option value="linux">Linux</option></select><p class="error" id="os-error"></p></div>
+          <div class="field"><label for="version">客户端版本 <span class="key">version</span></label><input id="version" type="text" placeholder="留空使用平台预设" autocomplete="off" aria-describedby="version-hint version-error"><p class="hint" id="version-hint">custom 从 app-info.json 读取客户端信息。</p><p class="error" id="version-error"></p></div>
+          <div class="field full"><label for="server">SSO 登录服务器 <span class="key">server</span></label><input id="server" type="text" placeholder="msfwifi.3g.qq.com:8080" spellcheck="false" aria-describedby="server-error"><p class="error" id="server-error"></p></div>
+          <div class="field full"><label for="signServer">签名服务器 <span class="key">signServer</span></label><input id="signServer" type="text" placeholder="http://127.0.0.1:5991" spellcheck="false" aria-describedby="signServer-hint signServer-error"><p class="hint" id="signServer-hint">使用 POST 签名；留空关闭签名。</p><p class="error" id="signServer-error"></p></div>
+          <div class="field"><label for="signToken">签名令牌 <span class="key">signToken</span></label><div class="inline"><input id="signToken" type="password" autocomplete="off" aria-describedby="signToken-error"><button class="show" type="button" data-toggle="signToken" aria-label="显示签名令牌" aria-pressed="false">显示</button></div><p class="error" id="signToken-error"></p></div>
+          <div class="field"><label for="interval">二维码轮询间隔 <span class="key">interval · 毫秒</span></label><input id="interval" type="number" min="1" max="2147483647" step="1" aria-describedby="interval-error"><p class="error" id="interval-error"></p></div>
+          <p class="note" id="custom-note">使用 custom 时，请将自己的 app-info.json 放在客户端要求的位置。本工具生成 YAML 配置。</p>
+        </div>
+      </section>
+      <section class="card" aria-labelledby="onebot-title">
+        <div class="card-head"><span class="number">02</span><div><h2 id="onebot-title">OneBot 接口</h2><small>监听地址、事件上报与访问控制</small></div></div>
+        <div class="fields">
+          <div class="group-label">正向 WEBSOCKET</div>
+          <div class="field"><label for="wsHost">监听地址 <span class="key">forwardWs.host</span></label><input id="wsHost" type="text" spellcheck="false" aria-describedby="wsHost-error"><p class="error" id="wsHost-error"></p></div>
+          <div class="field"><label for="wsPort">监听端口 <span class="key">forwardWs.port</span></label><input id="wsPort" type="number" min="1" max="65535" step="1" aria-describedby="wsPort-error"><p class="error" id="wsPort-error"></p></div>
+          <div class="field full"><label for="reverseWs">反向 WebSocket 地址 <span class="key">reverseWs</span></label><textarea id="reverseWs" placeholder="ws://127.0.0.1:6700/onebot/v11/ws&#10;wss://example.com/onebot" spellcheck="false" aria-describedby="reverseWs-hint reverseWs-error"></textarea><p class="hint" id="reverseWs-hint">每行一个 ws:// 或 wss:// 地址；留空生成 []。</p><p class="error" id="reverseWs-error"></p></div>
+          <div class="group-label">HTTP API 与事件上报</div>
+          <div class="field"><label for="httpHost">监听地址 <span class="key">http.host</span></label><input id="httpHost" type="text" spellcheck="false" aria-describedby="httpHost-error"><p class="error" id="httpHost-error"></p></div>
+          <div class="field"><label for="httpPort">监听端口 <span class="key">http.port</span></label><input id="httpPort" type="number" min="1" max="65535" step="1" aria-describedby="httpPort-error"><p class="error" id="httpPort-error"></p></div>
+          <div class="field full"><label for="httpPost">HTTP POST 上报地址 <span class="key">httpPost</span></label><textarea id="httpPost" placeholder="http://127.0.0.1:5701/onebot" spellcheck="false" aria-describedby="httpPost-hint httpPost-error"></textarea><p class="hint" id="httpPost-hint">每行一个 http:// 或 https:// 地址；留空生成 []。</p><p class="error" id="httpPost-error"></p></div>
+          <div class="field"><label for="accessToken">访问令牌 <span class="key">accessToken</span></label><div class="inline"><input id="accessToken" type="password" autocomplete="off" aria-describedby="accessToken-hint accessToken-error"><button class="show" type="button" data-toggle="accessToken" aria-label="显示访问令牌" aria-pressed="false">显示</button></div><p class="hint" id="accessToken-hint">留空时不校验令牌。</p><p class="error" id="accessToken-error"></p></div>
+          <div class="field"><label for="heartbeatInterval">心跳间隔 <span class="key">heartbeatInterval · 毫秒</span></label><input id="heartbeatInterval" type="number" min="0" max="2147483647" step="1" aria-describedby="heartbeatInterval-hint heartbeatInterval-error"><p class="hint" id="heartbeatInterval-hint">设为 0 关闭心跳。</p><p class="error" id="heartbeatInterval-error"></p></div>
+          <p class="note warning" id="network-note">当前接口监听所有网络地址且未设置访问令牌；能连接到端口的设备可免令牌访问 API。仅本机使用时，可将监听地址改为 127.0.0.1。</p>
+        </div>
+      </section>
+      <section class="card" aria-labelledby="files-title">
+        <div class="card-head"><span class="number">03</span><div><h2 id="files-title">日志与文件</h2><small>日志级别及会话持久化路径</small></div></div>
+        <div class="fields">
+          <div class="field full"><label for="level">日志级别 <span class="key">log.level</span></label><select id="level"><option>trace</option><option>debug</option><option>info</option><option>warn</option><option>error</option><option>fatal</option></select><p class="error" id="level-error"></p></div>
+          <div class="field full"><label for="sessionFile">登录会话保存路径 <span class="key">sessionFile</span></label><input id="sessionFile" type="text" spellcheck="false" aria-describedby="sessionFile-error"><p class="error" id="sessionFile-error"></p></div>
+          <div class="field full"><label for="qrImageFile">二维码图片保存路径 <span class="key">qrImageFile</span></label><input id="qrImageFile" type="text" spellcheck="false" aria-describedby="qrImageFile-error"><p class="error" id="qrImageFile-error"></p></div>
+        </div>
+        <div class="checkrow"><label><input id="comments" type="checkbox" checked>在 YAML 中包含中文注释</label></div>
+      </section>
+      <button class="reset" type="button" id="reset">↺ 恢复你提供的默认配置</button>
+    </form>
+    <aside class="preview" aria-label="生成的配置">
+      <div class="preview-head"><div class="file"><span class="file-icon" aria-hidden="true">&lt;/&gt;</span><strong>config.yaml</strong></div><span class="state" id="state" role="status">配置已就绪</span></div>
+      <p class="preview-desc">随输入即时更新 · 所有字段与原始配置对应</p>
+      <div class="code-wrap"><pre id="yaml" tabindex="0" aria-label="YAML 配置预览"></pre></div>
+      <div class="actions"><button type="button" class="btn secondary" id="copy">复制 YAML</button><button type="button" class="btn primary" id="download">下载配置 ↓</button></div>
+    </aside>
+  </div>
+  <p class="bottom">内容仅在当前页面处理，不上传、不自动保存。导出的配置包含填写的令牌。</p>
+</main>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+(() => {
+  'use strict';
+  const defaults = Object.freeze({os:'windows',version:'custom',server:'msfwifi.3g.qq.com:8080',signServer:'http://127.0.0.1:5991',signToken:'',interval:5000,wsHost:'0.0.0.0',wsPort:3999,reverseWs:'',httpHost:'0.0.0.0',httpPort:3998,httpPost:'',accessToken:'',heartbeatInterval:30000,level:'info',sessionFile:'.diana/session.json',qrImageFile:'.diana/qrcode.png'});
+  const $ = id => document.getElementById(id);
+  const numeric = new Set(['interval','wsPort','httpPort','heartbeatInterval']);
+  const list = value => value.split(/\r?\n/).map(v => v.trim()).filter(Boolean);
+  let currentYaml = '', toastTimer;
+  function read() {
+    const values = {};
+    for (const key of Object.keys(defaults)) {
+      const raw = $(key).value;
+      // Tokens are literal strings: preserve leading and trailing spaces.
+      values[key] = numeric.has(key) ? (raw.trim() === '' ? NaN : Number(raw)) : /Token$/.test(key) ? raw : raw.trim();
+    }
+    values.reverseWs = list(values.reverseWs);
+    values.httpPost = list(values.httpPost);
+    return values;
+  }
+  function hostValid(host) {
+    if (!host || /[\s/?#@\\]/.test(host)) return false;
+    const bare = host.startsWith('[') && host.endsWith(']') ? host.slice(1,-1) : host;
+    if (bare.includes(':')) {
+      try { return new URL('http://[' + bare + ']').hostname !== ''; } catch { return false; }
+    }
+    if (/^\d+(\.\d+){3}$/.test(bare)) return bare.split('.').every(v => Number(v) <= 255);
+    return bare.length <= 253 && bare.split('.').every(v => /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i.test(v));
+  }
+  function urlValid(value, protocols) {
+    if (/\s/.test(value) || !/^[a-z]+:\/\//i.test(value)) return false;
+    try { const url = new URL(value); return protocols.includes(url.protocol) && Boolean(url.hostname); } catch { return false; }
+  }
+  function validate(v) {
+    const errors = {};
+    if (!['windows','linux'].includes(v.os)) errors.os = '请选择 Windows 或 Linux。';
+    if (!['trace','debug','info','warn','error','fatal'].includes(v.level)) errors.level = '请选择有效的日志级别。';
+    const endpoint = v.server.match(/^(\[[^\]]+\]|[^:]+):(\d+)$/);
+    if (!endpoint || !hostValid(endpoint[1]) || Number(endpoint[2]) < 1 || Number(endpoint[2]) > 65535) errors.server = '请填写服务器地址:端口，例如 msfwifi.3g.qq.com:8080；IPv6 使用 [地址]:端口。';
+    if (v.signServer && !urlValid(v.signServer,['http:','https:'])) errors.signServer = '请输入有效的 http:// 或 https:// 地址，或留空。';
+    for (const key of ['wsHost','httpHost']) if (!hostValid(v[key])) errors[key] = '请输入有效的 IP 地址或主机名，不含端口。';
+    for (const key of ['wsPort','httpPort']) if (!Number.isInteger(v[key]) || v[key] < 1 || v[key] > 65535) errors[key] = '端口必须是 1–65535 的整数。';
+    if (!errors.wsPort && !errors.httpPort && v.wsPort === v.httpPort) errors.httpPort = 'HTTP 与 WebSocket 请使用不同端口，避免监听冲突。';
+    for (const key of ['interval','heartbeatInterval']) {
+      const min = key === 'interval' ? 1 : 0;
+      if (!Number.isInteger(v[key]) || v[key] < min || v[key] > 2147483647) errors[key] = '请输入 ' + min + '–2147483647 的整数（毫秒）。';
+    }
+    for (const [key,protocols] of [['reverseWs',['ws:','wss:']],['httpPost',['http:','https:']]]) {
+      const bad = v[key].findIndex(url => !urlValid(url,protocols));
+      if (bad !== -1) errors[key] = '第 ' + (bad + 1) + ' 个地址无效，请使用 ' + protocols.map(p=>p+'//').join(' 或 ') + '。';
+    }
+    for (const key of ['sessionFile','qrImageFile']) if (!v[key]) errors[key] = '请填写文件保存路径。';
+    for (const key of Object.keys(defaults)) {
+      if (typeof v[key] === 'string' && /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(v[key])) errors[key] = '请移除不可见的控制字符。';
+    }
+    return errors;
+  }
+  function yamlString(value) {
+    // Single quotes keep paths, punctuation and YAML-like strings literal.
+    // Double-quoted JSON escapes safely represent line breaks and tabs in YAML.
+    return /[\r\n\t]/.test(value) ? JSON.stringify(value) : "'" + value.replace(/'/g,"''") + "'";
+  }
+  function generate(v, comments) {
+    const lines = [];
+    const add = (indent,key,value,comment) => lines.push(' '.repeat(indent) + key + ':' + (value === null ? '' : ' ' + value) + (comments && comment ? '  # ' + comment : ''));
+    const str = (indent,key,value,comment) => add(indent,key,yamlString(value),comment);
+    const array = (key,values,comment) => {add(2,key,values.length ? null : '[]',comment);for (const value of values) lines.push('    - ' + yamlString(value));};
+    add(0,'protocol',null);
+    str(2,'os',v.os,'协议平台：windows / linux');
+    str(2,'version',v.version,'留空使用预设；custom 读取 app-info.json');
+    str(2,'server',v.server,'SSO 登录服务器');
+    str(2,'signServer',v.signServer,'签名服务器地址（POST），留空不签名');
+    str(2,'signToken',v.signToken,'签名服务器 token');
+    add(2,'interval',Number.isFinite(v.interval) ? String(v.interval) : 'null','二维码轮询间隔（毫秒）');
+    add(0,'onebot',null);
+    add(2,'forwardWs',null,'正向 WebSocket：本端监听');
+    str(4,'host',v.wsHost);
+    add(4,'port',Number.isFinite(v.wsPort) ? String(v.wsPort) : 'null');
+    array('reverseWs',v.reverseWs,'反向 WebSocket：主动连接的对端地址列表');
+    add(2,'http',null,'HTTP API：本端监听');
+    str(4,'host',v.httpHost);
+    add(4,'port',Number.isFinite(v.httpPort) ? String(v.httpPort) : 'null');
+    array('httpPost',v.httpPost,'HTTP POST：事件上报地址列表');
+    str(2,'accessToken',v.accessToken,'访问令牌，留空不校验');
+    add(2,'heartbeatInterval',Number.isFinite(v.heartbeatInterval) ? String(v.heartbeatInterval) : 'null','心跳间隔（毫秒），0 表示关闭');
+    add(0,'log',null);
+    str(2,'level',v.level,'trace / debug / info / warn / error / fatal');
+    str(0,'sessionFile',v.sessionFile,'登录会话持久化路径');
+    str(0,'qrImageFile',v.qrImageFile,'二维码图片保存路径');
+    return lines.join('\n') + '\n';
+  }
+  function update() {
+    const values = read(), errors = validate(values);
+    for (const key of Object.keys(defaults)) {
+      $(key).setAttribute('aria-invalid',errors[key] ? 'true' : 'false');
+      $(key + '-error').textContent = errors[key] || '';
+    }
+    const errorCount = Object.keys(errors).length;
+    currentYaml = generate(values,$('comments').checked);
+    $('yaml').textContent = currentYaml;
+    $('state').textContent = errorCount ? errorCount + ' 项需要修改' : '配置已就绪';
+    $('state').classList.toggle('invalid',Boolean(errorCount));
+    $('copy').disabled = $('download').disabled = Boolean(errorCount);
+    $('custom-note').hidden = values.version !== 'custom';
+    const wideHost = host => ['0.0.0.0','::','[::]'].includes(host);
+    $('network-note').hidden = Boolean(values.accessToken) || !(wideHost(values.wsHost) || wideHost(values.httpHost));
+  }
+  function restore() {
+    for (const [key,value] of Object.entries(defaults)) $(key).value = value;
+    $('comments').checked = true;
+    for (const btn of document.querySelectorAll('[data-toggle]')) {
+      $(btn.dataset.toggle).type = 'password'; btn.textContent = '显示'; btn.setAttribute('aria-pressed','false');
+      btn.setAttribute('aria-label','显示' + (btn.dataset.toggle === 'signToken' ? '签名令牌' : '访问令牌'));
+    }
+    update();
+  }
+  function notify(message) {
+    clearTimeout(toastTimer); $('toast').textContent = message; $('toast').hidden = false;
+    toastTimer = setTimeout(() => { $('toast').hidden = true; },3500);
+  }
+  $('config-form').addEventListener('submit',event => event.preventDefault());
+  $('config-form').addEventListener('input',update);
+  $('config-form').addEventListener('change',update);
+  for (const btn of document.querySelectorAll('[data-toggle]')) btn.addEventListener('click',() => {
+    const input = $(btn.dataset.toggle), showing = input.type === 'password';
+    input.type = showing ? 'text' : 'password';btn.textContent = showing ? '隐藏' : '显示';btn.setAttribute('aria-pressed',String(showing));
+    btn.setAttribute('aria-label',(showing ? '隐藏' : '显示') + (btn.dataset.toggle === 'signToken' ? '签名令牌' : '访问令牌'));
+  });
+  $('reset').addEventListener('click',() => { restore(); notify('已恢复原始默认配置'); });
+  $('copy').addEventListener('click',async () => {
+    update(); if ($('copy').disabled) return;
+    const content = currentYaml;
+    try {
+      if (!navigator.clipboard || !window.isSecureContext) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(content);notify('YAML 已复制');
+    } catch {
+      const temp = document.createElement('textarea');temp.value = content;temp.style.cssText = 'position:fixed;left:-9999px;top:0';document.body.appendChild(temp);temp.select();
+      let copied = false;try { copied = document.execCommand('copy'); } catch {} finally { temp.remove(); $('copy').focus(); }
+      if (copied) notify('YAML 已复制');
+      else { const range = document.createRange();range.selectNodeContents($('yaml'));const selection = window.getSelection();selection.removeAllRanges();selection.addRange(range);notify('请按 Ctrl+C 复制已选中的 YAML，或下载配置'); }
+    }
+  });
+  $('download').addEventListener('click',() => {
+    update(); if ($('download').disabled) return;
+    const url = URL.createObjectURL(new Blob([currentYaml],{type:'application/yaml;charset=utf-8'}));
+    const link = document.createElement('a');link.href = url;link.download = 'config.yaml';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    notify('已发起 config.yaml 下载');
+  });
+  restore();
+})();
+</script>
+</body>
+</html>
