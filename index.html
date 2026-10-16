@@ -20,6 +20,7 @@
     textarea{min-height:86px;resize:vertical;font-family:ui-monospace,Consolas,monospace;font-size:12px}input[aria-invalid="true"],textarea[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--danger);background:#fff8f8}
     .hint{color:var(--muted);font-size:12px;margin-top:6px}.error{color:var(--danger);font-size:12px;margin-top:4px}.error:empty{display:none}.group-label{grid-column:1/-1;color:var(--accent);font-size:12px;font-weight:700;letter-spacing:1px;border-bottom:1px solid #e6edef;padding-bottom:8px}.inline{display:flex;gap:8px}.inline input{min-width:0}.show{border:1px solid #ccd9de;border-radius:8px;background:#f8fbfb;color:var(--muted);padding:0 11px;white-space:nowrap;font-size:12px}
     .note{grid-column:1/-1;border-radius:8px;padding:11px 13px;background:#f0f6f5;font-size:12px;color:#436560}.note.warning{background:#fff6df;color:#876219}.note[hidden]{display:none}
+    [hidden]{display:none!important}.transport{grid-column:1/-1;border:1px solid var(--line);border-radius:10px;min-width:0;margin:0;padding:16px}.transport-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.transport-title{font-size:14px;font-weight:700;color:var(--accent)}.transport-key{font:11px ui-monospace,Consolas,monospace;color:var(--muted);margin-top:2px}.transport .fields{padding:0;gap:14px 16px}.transport-toolbar{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px}.small-btn{border:1px solid #ccd9de;background:#f8fbfb;border-radius:7px;padding:7px 10px;font-size:12px;color:var(--accent);white-space:nowrap}.remove-btn{color:var(--danger);background:#fffafa;border-color:#ead7d7}.address-row{margin-top:13px}.address-row label{font-size:12px}.address-row .inline{align-items:start}.address-empty{margin:8px 0 12px;color:var(--muted);font-size:12px}.address-add{margin-top:12px}.transport-summary{grid-column:1/-1;color:var(--muted);font-size:12px}.transport-hint{color:var(--muted);font-size:12px;margin-bottom:10px}
     .preview{position:sticky;top:24px;background:#142933;border-radius:16px;overflow:hidden;box-shadow:0 12px 30px #162d3710}.preview-head{padding:20px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff16;color:#ecf3f5}.file{display:flex;align-items:center;gap:10px}.file-icon{font:13px monospace;color:#8de0cb}.state{font-size:12px;color:#9bdbc7}.state.invalid{color:#ffd69e}
     .preview-desc{color:#95aeb7;padding:15px 22px 0;font-size:12px}.code-wrap{padding:18px 22px 22px;overflow:auto;max-height:calc(100vh - 290px);min-height:360px}pre{margin:0;tab-size:2;color:#d2e2e8;white-space:pre;font:12px/1.85 ui-monospace,"Cascadia Code",Consolas,monospace}
     .actions{display:flex;gap:10px;flex-wrap:wrap;padding:18px 22px;background:#1b333e;border-top:1px solid #ffffff10}.btn{border:1px solid #ccd9de;background:white;border-radius:8px;padding:10px 15px;font-weight:600;color:var(--ink)}.primary{background:#66d2b6;border-color:#66d2b6;color:#12352d}.secondary{background:#294550;color:#e6f1f4;border-color:#3d5b65}.btn:disabled{opacity:.45;cursor:not-allowed}.reset{border:0;background:transparent;color:var(--muted);padding:8px 0;font-size:12px;justify-self:start}.bottom{color:var(--muted);font-size:12px;margin-top:24px;text-align:center}.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#173c34;color:white;max-width:calc(100vw - 32px);padding:12px 20px;border-radius:10px;box-shadow:0 6px 25px #0002;z-index:10}.toast[hidden]{display:none}.checkrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 24px 19px}.checkrow label{font-size:12px;font-weight:400;display:flex;gap:8px;align-items:center;margin:0;color:var(--muted)}.checkrow input{width:15px;height:15px;accent-color:var(--accent)}
@@ -50,14 +51,42 @@
       <section class="card" aria-labelledby="onebot-title">
         <div class="card-head"><span class="number">02</span><div><h2 id="onebot-title">OneBot 接口</h2><small>监听地址、事件上报与访问控制</small></div></div>
         <div class="fields">
-          <div class="group-label">正向 WEBSOCKET</div>
-          <div class="field"><label for="wsHost">监听地址 <span class="key">forwardWs.host</span></label><input id="wsHost" type="text" spellcheck="false" aria-describedby="wsHost-error"><p class="error" id="wsHost-error"></p></div>
-          <div class="field"><label for="wsPort">监听端口 <span class="key">forwardWs.port</span></label><input id="wsPort" type="number" min="1" max="65535" step="1" aria-describedby="wsPort-error"><p class="error" id="wsPort-error"></p></div>
-          <div class="field full"><label for="reverseWs">反向 WebSocket 地址 <span class="key">reverseWs</span></label><textarea id="reverseWs" placeholder="ws://127.0.0.1:6700/onebot/v11/ws&#10;wss://example.com/onebot" spellcheck="false" aria-describedby="reverseWs-hint reverseWs-error"></textarea><p class="hint" id="reverseWs-hint">每行一个 ws:// 或 wss:// 地址；留空生成 []。</p><p class="error" id="reverseWs-error"></p></div>
-          <div class="group-label">HTTP API 与事件上报</div>
-          <div class="field"><label for="httpHost">监听地址 <span class="key">http.host</span></label><input id="httpHost" type="text" spellcheck="false" aria-describedby="httpHost-error"><p class="error" id="httpHost-error"></p></div>
-          <div class="field"><label for="httpPort">监听端口 <span class="key">http.port</span></label><input id="httpPort" type="number" min="1" max="65535" step="1" aria-describedby="httpPort-error"><p class="error" id="httpPort-error"></p></div>
-          <div class="field full"><label for="httpPost">HTTP POST 上报地址 <span class="key">httpPost</span></label><textarea id="httpPost" placeholder="http://127.0.0.1:5701/onebot" spellcheck="false" aria-describedby="httpPost-hint httpPost-error"></textarea><p class="hint" id="httpPost-hint">每行一个 http:// 或 https:// 地址；留空生成 []。</p><p class="error" id="httpPost-error"></p></div>
+          <p class="transport-summary" id="transport-summary" role="status"></p>
+          <div class="transport-toolbar" aria-label="添加接口">
+            <button type="button" class="small-btn" data-add-transport="forwardWs" hidden>＋ 添加正向 WebSocket</button>
+            <button type="button" class="small-btn" data-add-transport="reverseWs" hidden>＋ 添加反向 WebSocket</button>
+            <button type="button" class="small-btn" data-add-transport="http" hidden>＋ 添加正向 HTTP</button>
+            <button type="button" class="small-btn" data-add-transport="httpPost" hidden>＋ 添加反向 HTTP</button>
+          </div>
+          <fieldset class="transport" id="forwardWs-section" aria-labelledby="forwardWs-title">
+            <div class="transport-head"><div><h3 class="transport-title" id="forwardWs-title" style="margin:0">正向 WebSocket</h3><p class="transport-key">forwardWs · 本端监听</p></div><button type="button" class="small-btn remove-btn" data-remove-transport="forwardWs" aria-label="删除正向 WebSocket 接口">删除接口</button></div>
+            <div class="fields">
+              <div class="field"><label for="wsHost">监听地址 <span class="key">host</span></label><input id="wsHost" type="text" spellcheck="false" aria-describedby="wsHost-error"><p class="error" id="wsHost-error"></p></div>
+              <div class="field"><label for="wsPort">监听端口 <span class="key">port</span></label><input id="wsPort" type="number" min="1" max="65535" step="1" aria-describedby="wsPort-error"><p class="error" id="wsPort-error"></p></div>
+            </div>
+          </fieldset>
+          <fieldset class="transport" id="reverseWs-section" aria-labelledby="reverseWs-title">
+            <div class="transport-head"><div><h3 class="transport-title" id="reverseWs-title" style="margin:0">反向 WebSocket</h3><p class="transport-key">reverseWs · 主动连接对端</p></div><button type="button" class="small-btn remove-btn" data-remove-transport="reverseWs" aria-label="删除反向 WebSocket 接口">删除接口</button></div>
+            <p class="transport-hint">支持多个 ws:// 或 wss:// 地址，按列表顺序导出。</p>
+            <div id="reverseWs-rows"></div>
+            <p class="address-empty" id="reverseWs-empty">暂无连接地址，导出为 reverseWs: []。</p>
+            <button type="button" class="small-btn address-add" data-add-address="reverseWs">＋ 添加连接地址</button>
+          </fieldset>
+          <fieldset class="transport" id="http-section" aria-labelledby="http-title">
+            <div class="transport-head"><div><h3 class="transport-title" id="http-title" style="margin:0">正向 HTTP</h3><p class="transport-key">http · HTTP API 本端监听</p></div><button type="button" class="small-btn remove-btn" data-remove-transport="http" aria-label="删除正向 HTTP 接口">删除接口</button></div>
+            <div class="fields">
+              <div class="field"><label for="httpHost">监听地址 <span class="key">host</span></label><input id="httpHost" type="text" spellcheck="false" aria-describedby="httpHost-error"><p class="error" id="httpHost-error"></p></div>
+              <div class="field"><label for="httpPort">监听端口 <span class="key">port</span></label><input id="httpPort" type="number" min="1" max="65535" step="1" aria-describedby="httpPort-error"><p class="error" id="httpPort-error"></p></div>
+            </div>
+          </fieldset>
+          <fieldset class="transport" id="httpPost-section" aria-labelledby="httpPost-title">
+            <div class="transport-head"><div><h3 class="transport-title" id="httpPost-title" style="margin:0">反向 HTTP</h3><p class="transport-key">httpPost · HTTP POST 事件上报</p></div><button type="button" class="small-btn remove-btn" data-remove-transport="httpPost" aria-label="删除反向 HTTP 接口">删除接口</button></div>
+            <p class="transport-hint">向对端上报事件，支持多个 http:// 或 https:// 地址。</p>
+            <div id="httpPost-rows"></div>
+            <p class="address-empty" id="httpPost-empty">暂无上报地址，导出为 httpPost: []。</p>
+            <button type="button" class="small-btn address-add" data-add-address="httpPost">＋ 添加上报地址</button>
+          </fieldset>
+          <div class="group-label">公共设置</div>
           <div class="field"><label for="accessToken">访问令牌 <span class="key">accessToken</span></label><div class="inline"><input id="accessToken" type="password" autocomplete="off" aria-describedby="accessToken-hint accessToken-error"><button class="show" type="button" data-toggle="accessToken" aria-label="显示访问令牌" aria-pressed="false">显示</button></div><p class="hint" id="accessToken-hint">留空时不校验令牌。</p><p class="error" id="accessToken-error"></p></div>
           <div class="field"><label for="heartbeatInterval">心跳间隔 <span class="key">heartbeatInterval · 毫秒</span></label><input id="heartbeatInterval" type="number" min="0" max="2147483647" step="1" aria-describedby="heartbeatInterval-hint heartbeatInterval-error"><p class="hint" id="heartbeatInterval-hint">设为 0 关闭心跳。</p><p class="error" id="heartbeatInterval-error"></p></div>
           <p class="note warning" id="network-note">当前接口监听所有网络地址且未设置访问令牌；能连接到端口的设备可免令牌访问 API。仅本机使用时，可将监听地址改为 127.0.0.1。</p>
@@ -87,11 +116,46 @@
 <script>
 (() => {
   'use strict';
-  const defaults = Object.freeze({os:'windows',version:'custom',server:'msfwifi.3g.qq.com:8080',signServer:'http://127.0.0.1:5991',signToken:'',interval:5000,wsHost:'0.0.0.0',wsPort:3999,reverseWs:'',httpHost:'0.0.0.0',httpPort:3998,httpPost:'',accessToken:'',heartbeatInterval:30000,level:'info',sessionFile:'.diana/session.json',qrImageFile:'.diana/qrcode.png'});
+  const defaults = Object.freeze({os:'windows',version:'custom',server:'msfwifi.3g.qq.com:8080',signServer:'http://127.0.0.1:5991',signToken:'',interval:5000,wsHost:'0.0.0.0',wsPort:3999,httpHost:'0.0.0.0',httpPort:3998,accessToken:'',heartbeatInterval:30000,level:'info',sessionFile:'.diana/session.json',qrImageFile:'.diana/qrcode.png'});
   const $ = id => document.getElementById(id);
   const numeric = new Set(['interval','wsPort','httpPort','heartbeatInterval']);
-  const list = value => value.split(/\r?\n/).map(v => v.trim()).filter(Boolean);
+  const transports = {forwardWs:true,reverseWs:true,http:true,httpPost:true};
+  const transportNames = {forwardWs:'正向 WebSocket',reverseWs:'反向 WebSocket',http:'正向 HTTP',httpPost:'反向 HTTP'};
+  const fieldTransports = {wsHost:'forwardWs',wsPort:'forwardWs',httpHost:'http',httpPort:'http'};
+  const addressKeys = ['reverseWs','httpPost'];
+  let nextAddressId = 0;
   let currentYaml = '', toastTimer;
+  function addressInputs(key) { return [...$(key + '-rows').querySelectorAll('input')]; }
+  function syncAddressLabels(key) {
+    addressInputs(key).forEach((input,index) => {
+      input.closest('.address-row').querySelector('label').textContent = '地址 ' + (index + 1);
+      input.closest('.address-row').querySelector('button').setAttribute('aria-label','删除' + transportNames[key] + '地址 ' + (index + 1));
+    });
+    $(key + '-empty').hidden = addressInputs(key).length > 0;
+  }
+  function addAddress(key) {
+    const id = key + '-address-' + (++nextAddressId);
+    const row = document.createElement('div'); row.className = 'address-row';
+    const label = document.createElement('label'); label.htmlFor = id;
+    const inline = document.createElement('div'); inline.className = 'inline';
+    const input = document.createElement('input'); input.id = id; input.type = 'text'; input.spellcheck = false;
+    input.placeholder = key === 'reverseWs' ? 'ws://127.0.0.1:6700/onebot/v11/ws' : 'http://127.0.0.1:5701/onebot';
+    input.setAttribute('aria-describedby',id + '-error');
+    const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'small-btn remove-btn'; remove.dataset.removeAddress = key; remove.textContent = '删除';
+    const error = document.createElement('p'); error.id = id + '-error'; error.className = 'error';
+    inline.append(input,remove); row.append(label,inline,error); $(key + '-rows').append(row);
+    syncAddressLabels(key); return input;
+  }
+  function setTransport(key,enabled) {
+    transports[key] = enabled;
+    const section = $(key + '-section'); section.hidden = !enabled; section.disabled = !enabled;
+    document.querySelector('[data-add-transport="' + key + '"]').hidden = enabled;
+    if (enabled && addressKeys.includes(key) && addressInputs(key).length === 0) addAddress(key);
+    update();
+    if (enabled) section.querySelector('input').focus();
+    else document.querySelector('[data-add-transport="' + key + '"]').focus();
+    notify(transportNames[key] + (enabled ? '已添加' : '已删除，导出时省略对应配置'));
+  }
   function read() {
     const values = {};
     for (const key of Object.keys(defaults)) {
@@ -99,8 +163,8 @@
       // Tokens are literal strings: preserve leading and trailing spaces.
       values[key] = numeric.has(key) ? (raw.trim() === '' ? NaN : Number(raw)) : /Token$/.test(key) ? raw : raw.trim();
     }
-    values.reverseWs = list(values.reverseWs);
-    values.httpPost = list(values.httpPost);
+    values.transports = {...transports};
+    for (const key of addressKeys) values[key] = addressInputs(key).map(input => input.value.trim());
     return values;
   }
   function hostValid(host) {
@@ -123,19 +187,22 @@
     const endpoint = v.server.match(/^(\[[^\]]+\]|[^:]+):(\d+)$/);
     if (!endpoint || !hostValid(endpoint[1]) || Number(endpoint[2]) < 1 || Number(endpoint[2]) > 65535) errors.server = '请填写服务器地址:端口，例如 msfwifi.3g.qq.com:8080；IPv6 使用 [地址]:端口。';
     if (v.signServer && !urlValid(v.signServer,['http:','https:'])) errors.signServer = '请输入有效的 http:// 或 https:// 地址，或留空。';
-    for (const key of ['wsHost','httpHost']) if (!hostValid(v[key])) errors[key] = '请输入有效的 IP 地址或主机名，不含端口。';
-    for (const key of ['wsPort','httpPort']) if (!Number.isInteger(v[key]) || v[key] < 1 || v[key] > 65535) errors[key] = '端口必须是 1–65535 的整数。';
-    if (!errors.wsPort && !errors.httpPort && v.wsPort === v.httpPort) errors.httpPort = 'HTTP 与 WebSocket 请使用不同端口，避免监听冲突。';
+    for (const key of ['wsHost','httpHost']) if (v.transports[fieldTransports[key]] && !hostValid(v[key])) errors[key] = '请输入有效的 IP 地址或主机名，不含端口。';
+    for (const key of ['wsPort','httpPort']) if (v.transports[fieldTransports[key]] && (!Number.isInteger(v[key]) || v[key] < 1 || v[key] > 65535)) errors[key] = '端口必须是 1–65535 的整数。';
+    if (v.transports.forwardWs && v.transports.http && !errors.wsPort && !errors.httpPort && v.wsPort === v.httpPort) errors.httpPort = 'HTTP 与 WebSocket 请使用不同端口，避免监听冲突。';
     for (const key of ['interval','heartbeatInterval']) {
       const min = key === 'interval' ? 1 : 0;
       if (!Number.isInteger(v[key]) || v[key] < min || v[key] > 2147483647) errors[key] = '请输入 ' + min + '–2147483647 的整数（毫秒）。';
     }
     for (const [key,protocols] of [['reverseWs',['ws:','wss:']],['httpPost',['http:','https:']]]) {
-      const bad = v[key].findIndex(url => !urlValid(url,protocols));
-      if (bad !== -1) errors[key] = '第 ' + (bad + 1) + ' 个地址无效，请使用 ' + protocols.map(p=>p+'//').join(' 或 ') + '。';
+      if (!v.transports[key]) continue;
+      addressInputs(key).forEach((input,index) => {
+        if (!urlValid(v[key][index],protocols)) errors[input.id] = v[key][index] ? '请输入有效的 ' + protocols.map(p=>p+'//').join(' 或 ') + ' 地址。' : '请填写地址，或删除这一行。';
+      });
     }
     for (const key of ['sessionFile','qrImageFile']) if (!v[key]) errors[key] = '请填写文件保存路径。';
     for (const key of Object.keys(defaults)) {
+      if (fieldTransports[key] && !v.transports[fieldTransports[key]]) continue;
       if (typeof v[key] === 'string' && /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(v[key])) errors[key] = '请移除不可见的控制字符。';
     }
     return errors;
@@ -158,14 +225,18 @@
     str(2,'signToken',v.signToken,'签名服务器 token');
     add(2,'interval',Number.isFinite(v.interval) ? String(v.interval) : 'null','二维码轮询间隔（毫秒）');
     add(0,'onebot',null);
-    add(2,'forwardWs',null,'正向 WebSocket：本端监听');
-    str(4,'host',v.wsHost);
-    add(4,'port',Number.isFinite(v.wsPort) ? String(v.wsPort) : 'null');
-    array('reverseWs',v.reverseWs,'反向 WebSocket：主动连接的对端地址列表');
-    add(2,'http',null,'HTTP API：本端监听');
-    str(4,'host',v.httpHost);
-    add(4,'port',Number.isFinite(v.httpPort) ? String(v.httpPort) : 'null');
-    array('httpPost',v.httpPost,'HTTP POST：事件上报地址列表');
+    if (v.transports.forwardWs) {
+      add(2,'forwardWs',null,'正向 WebSocket：本端监听');
+      str(4,'host',v.wsHost);
+      add(4,'port',Number.isFinite(v.wsPort) ? String(v.wsPort) : 'null');
+    }
+    if (v.transports.reverseWs) array('reverseWs',v.reverseWs,'反向 WebSocket：主动连接的对端地址列表');
+    if (v.transports.http) {
+      add(2,'http',null,'正向 HTTP：HTTP API 本端监听');
+      str(4,'host',v.httpHost);
+      add(4,'port',Number.isFinite(v.httpPort) ? String(v.httpPort) : 'null');
+    }
+    if (v.transports.httpPost) array('httpPost',v.httpPost,'反向 HTTP：HTTP POST 事件上报地址列表');
     str(2,'accessToken',v.accessToken,'访问令牌，留空不校验');
     add(2,'heartbeatInterval',Number.isFinite(v.heartbeatInterval) ? String(v.heartbeatInterval) : 'null','心跳间隔（毫秒），0 表示关闭');
     add(0,'log',null);
@@ -176,7 +247,8 @@
   }
   function update() {
     const values = read(), errors = validate(values);
-    for (const key of Object.keys(defaults)) {
+    const fieldKeys = [...Object.keys(defaults),...addressKeys.flatMap(key => addressInputs(key).map(input => input.id))];
+    for (const key of fieldKeys) {
       $(key).setAttribute('aria-invalid',errors[key] ? 'true' : 'false');
       $(key + '-error').textContent = errors[key] || '';
     }
@@ -188,10 +260,18 @@
     $('copy').disabled = $('download').disabled = Boolean(errorCount);
     $('custom-note').hidden = values.version !== 'custom';
     const wideHost = host => ['0.0.0.0','::','[::]'].includes(host);
-    $('network-note').hidden = Boolean(values.accessToken) || !(wideHost(values.wsHost) || wideHost(values.httpHost));
+    $('network-note').hidden = Boolean(values.accessToken) || !((values.transports.forwardWs && wideHost(values.wsHost)) || (values.transports.http && wideHost(values.httpHost)));
+    const enabledCount = Object.values(transports).filter(Boolean).length;
+    $('transport-summary').textContent = enabledCount ? '已添加 ' + enabledCount + ' 种接口。删除接口后，YAML 将省略对应配置；可以随时重新添加。' : '暂无接口，当前配置不会生成监听或上报地址。点击下方按钮添加接口。';
+    document.querySelector('.transport-toolbar').hidden = enabledCount === 4;
   }
   function restore() {
     for (const [key,value] of Object.entries(defaults)) $(key).value = value;
+    for (const key of Object.keys(transports)) {
+      transports[key] = true; $(key + '-section').hidden = false; $(key + '-section').disabled = false;
+      document.querySelector('[data-add-transport="' + key + '"]').hidden = true;
+    }
+    for (const key of addressKeys) { $(key + '-rows').replaceChildren(); syncAddressLabels(key); }
     $('comments').checked = true;
     for (const btn of document.querySelectorAll('[data-toggle]')) {
       $(btn.dataset.toggle).type = 'password'; btn.textContent = '显示'; btn.setAttribute('aria-pressed','false');
@@ -206,6 +286,19 @@
   $('config-form').addEventListener('submit',event => event.preventDefault());
   $('config-form').addEventListener('input',update);
   $('config-form').addEventListener('change',update);
+  $('config-form').addEventListener('click',event => {
+    const button = event.target.closest('button'); if (!button) return;
+    if (button.dataset.addTransport) setTransport(button.dataset.addTransport,true);
+    else if (button.dataset.removeTransport) setTransport(button.dataset.removeTransport,false);
+    else if (button.dataset.addAddress) { const input = addAddress(button.dataset.addAddress); update(); input.focus(); }
+    else if (button.dataset.removeAddress) {
+      const key = button.dataset.removeAddress, row = button.closest('.address-row');
+      const inputs = addressInputs(key), index = inputs.indexOf(row.querySelector('input'));
+      row.remove(); syncAddressLabels(key); update();
+      const remaining = addressInputs(key);
+      (remaining[Math.min(index,remaining.length - 1)] || $(key + '-section').querySelector('[data-add-address]')).focus();
+    }
+  });
   for (const btn of document.querySelectorAll('[data-toggle]')) btn.addEventListener('click',() => {
     const input = $(btn.dataset.toggle), showing = input.type === 'password';
     input.type = showing ? 'text' : 'password';btn.textContent = showing ? '隐藏' : '显示';btn.setAttribute('aria-pressed',String(showing));
